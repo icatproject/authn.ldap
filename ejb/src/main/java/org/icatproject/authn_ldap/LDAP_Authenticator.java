@@ -1,21 +1,32 @@
-package org.icatproject.userldap.facility;
+package org.icatproject.authn_ldap;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
+import javax.naming.AuthenticationException;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.InitialDirContext;
 
 import org.apache.log4j.Logger;
 import org.icatproject.core.IcatException;
 import org.icatproject.core.authentication.Authenticator;
 
-public class LdapUser implements Authenticator {
+@Stateless()
+@Remote(Authenticator.class)
+public class LDAP_Authenticator implements Authenticator {
 
-	private LdapAuthenticator ldapAuthenticator;
-	private static final Logger log = Logger.getLogger(LdapUser.class);
+	private static final Logger log = Logger.getLogger(LDAP_Authenticator.class);
 	private IcatException icatException;
+	private String securityPrincipal;
+	private String providerUrl;
 
-	public LdapUser() throws IcatException {
+	public LDAP_Authenticator() throws IcatException {
 		File f = new File("icat.properties");
 		try {
 			Properties props = new Properties();
@@ -34,7 +45,8 @@ public class LdapUser implements Authenticator {
 				throw new IcatException(IcatException.IcatExceptionType.INTERNAL,
 						"auth.ldap.security_principal value must include a % to be substituted by the user name");
 			}
-			ldapAuthenticator = new LdapAuthenticator(providerUrl, securityPrincipal);
+			this.providerUrl = providerUrl;
+			this.securityPrincipal = securityPrincipal;
 		} catch (Exception e) {
 			String msg = "Problem with " + f.getAbsolutePath() + "  " + e.getMessage();
 			log.fatal(msg);
@@ -59,14 +71,27 @@ public class LdapUser implements Authenticator {
 					"Password cannot be null or empty.");
 		}
 
-		log.info("Checking password against database");
+		log.info("Checking username/password with ldap server");
 
-		if (!ldapAuthenticator.authenticate(username, password)) {
-			throw new IcatException(IcatException.IcatExceptionType.SESSION,
-					"Username and password do not match");
+		Hashtable<Object, Object> authEnv = new Hashtable<Object, Object>();
+		authEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		authEnv.put(Context.PROVIDER_URL, providerUrl);
+		authEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
+		authEnv.put(Context.SECURITY_PRINCIPAL, securityPrincipal.replace("%", username));
+		authEnv.put(Context.SECURITY_CREDENTIALS, password);
+
+		try {
+			new InitialDirContext(authEnv);
+			log.info("Authentication successful");
+			return new Authentication(username, LDAP_Authenticator.class.getName());
+		} catch (AuthenticationException e) {
+			log.debug("Authentication exception thrown:" + e.getMessage());
+			throw new IcatException(IcatException.IcatExceptionType.SESSION, e.getMessage());
+		} catch (NamingException e) {
+			log.debug("Naming exception thrown" + e.getMessage());
+			throw new IcatException(IcatException.IcatExceptionType.SESSION, e.getMessage());
 		}
 
-		return new Authentication(username, LdapUser.class.getName());
 	}
 
 }
