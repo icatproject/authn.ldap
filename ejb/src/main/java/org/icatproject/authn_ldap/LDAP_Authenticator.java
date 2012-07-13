@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.naming.AuthenticationException;
@@ -15,49 +16,82 @@ import javax.naming.directory.InitialDirContext;
 
 import org.apache.log4j.Logger;
 import org.icatproject.core.IcatException;
+import org.icatproject.core.authentication.AddressChecker;
+import org.icatproject.core.authentication.Authentication;
 import org.icatproject.core.authentication.Authenticator;
 
-@Stateless()
-@Remote(Authenticator.class)
+/* Mapped name is to avoid name clashes */
+@Stateless(mappedName = "org.icatproject.authn_ldap.LDAP_Authenticator")
+@Remote
 public class LDAP_Authenticator implements Authenticator {
 
 	private static final Logger log = Logger.getLogger(LDAP_Authenticator.class);
-	private IcatException icatException;
 	private String securityPrincipal;
 	private String providerUrl;
+	private AddressChecker addressChecker;
 
-	public LDAP_Authenticator() throws IcatException {
-		File f = new File("icat.properties");
+	@SuppressWarnings("unused")
+	@PostConstruct
+	private void init() {
+		File f = new File("authn_ldap.properties");
+		Properties props = null;
 		try {
-			Properties props = new Properties();
+			props = new Properties();
 			props.load(new FileInputStream(f));
-			String providerUrl = props.getProperty("auth.ldap.provider_url");
-			if (providerUrl == null) {
-				throw new IcatException(IcatException.IcatExceptionType.INTERNAL,
-						"auth.ldap.provider_url not defined");
-			}
-			String securityPrincipal = props.getProperty("auth.ldap.security_principal");
-			if (securityPrincipal == null) {
-				throw new IcatException(IcatException.IcatExceptionType.INTERNAL,
-						"auth.ldap.security_principal not defined");
-			}
-			if (securityPrincipal.indexOf('%') < 0) {
-				throw new IcatException(IcatException.IcatExceptionType.INTERNAL,
-						"auth.ldap.security_principal value must include a % to be substituted by the user name");
-			}
-			this.providerUrl = providerUrl;
-			this.securityPrincipal = securityPrincipal;
 		} catch (Exception e) {
-			String msg = "Problem with " + f.getAbsolutePath() + "  " + e.getMessage();
+			String msg = "Unable to read property file " + f.getAbsolutePath() + "  "
+					+ e.getMessage();
 			log.fatal(msg);
-			icatException = new IcatException(IcatException.IcatExceptionType.INTERNAL, msg);
-			throw icatException;
+			throw new IllegalStateException(msg);
+
 		}
-		log.trace("Created LdapUser");
+		String authips = props.getProperty("ip");
+		if (authips != null) {
+			try {
+				addressChecker = new AddressChecker(authips);
+			} catch (IcatException e) {
+				String msg = "Problem creating AddressChecker with information from "
+						+ f.getAbsolutePath() + "  " + e.getMessage();
+				log.fatal(msg);
+				throw new IllegalStateException(msg);
+			}
+		}
+
+		String providerUrl = props.getProperty("provider_url");
+		if (providerUrl == null) {
+			String msg = "provider_url not defined in " + f.getAbsolutePath();
+			log.fatal(msg);
+			throw new IllegalStateException(msg);
+		}
+		String securityPrincipal = props.getProperty("security_principal");
+		if (securityPrincipal == null) {
+			String msg = "security_principal not defined in " + f.getAbsolutePath();
+			log.fatal(msg);
+			throw new IllegalStateException(msg);
+		}
+		if (securityPrincipal.indexOf('%') < 0) {
+			String msg = "security_principal value must include a % to be substituted by the user name "
+					+ f.getAbsolutePath();
+			log.fatal(msg);
+			throw new IllegalStateException(msg);
+		}
+		this.providerUrl = providerUrl;
+		this.securityPrincipal = securityPrincipal;
+
+		log.debug("Initialised LDAP_Authenticator");
 	}
 
 	@Override
-	public Authentication login(Map<String, String> credentials) throws IcatException {
+	public Authentication authenticate(Map<String, String> credentials, String remoteAddr)
+			throws IcatException {
+
+		if (addressChecker != null) {
+			if (!addressChecker.check(remoteAddr)) {
+				throw new IcatException(IcatException.IcatExceptionType.SESSION,
+						"authn_db does not allow log in from your IP address " + remoteAddr);
+			}
+		}
+
 		String username = credentials.get("username");
 		log.trace("login:" + username);
 
