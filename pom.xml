@@ -25,7 +25,8 @@
         <serverHost>localhost</serverHost>
     </properties>
 
-    <description>Main pom to build Database Authentication components. For more information please see the individual components.</description>
+    <description>Main pom to build LDAP Authentication components. For more information please see the individual components.</description>
+
     <issueManagement>
         <url>http://code.google.com/p/icatproject/issues/list</url>
         <system>Google Code</system>
@@ -67,6 +68,42 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.1</version>
+                    <dependencies>
+                        <dependency><!-- add support for ssh/scp -->
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                    <dependencies>
+                        <dependency><!-- add support for ssh/scp -->
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+
 
     <reporting>
         <plugins>
