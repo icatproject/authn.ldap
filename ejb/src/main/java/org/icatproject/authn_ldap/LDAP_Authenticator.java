@@ -9,16 +9,15 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 
 import org.apache.log4j.Logger;
+import org.icatproject.authentication.AddressChecker;
+import org.icatproject.authentication.Authentication;
+import org.icatproject.authentication.Authenticator;
 import org.icatproject.core.IcatException;
-import org.icatproject.core.authentication.AddressChecker;
-import org.icatproject.core.authentication.Authentication;
-import org.icatproject.core.authentication.Authenticator;
 
 /* Mapped name is to avoid name clashes */
 @Stateless(mappedName = "org.icatproject.authn_ldap.LDAP_Authenticator")
@@ -28,7 +27,8 @@ public class LDAP_Authenticator implements Authenticator {
 	private static final Logger log = Logger.getLogger(LDAP_Authenticator.class);
 	private String securityPrincipal;
 	private String providerUrl;
-	private AddressChecker addressChecker;
+	private org.icatproject.authentication.AddressChecker addressChecker;
+	private String mechanism;
 
 	@SuppressWarnings("unused")
 	@PostConstruct
@@ -78,6 +78,9 @@ public class LDAP_Authenticator implements Authenticator {
 		this.providerUrl = providerUrl;
 		this.securityPrincipal = securityPrincipal;
 
+		// Note that the mechanism is optional
+		mechanism = props.getProperty("mechanism");
+
 		log.debug("Initialised LDAP_Authenticator");
 	}
 
@@ -116,15 +119,12 @@ public class LDAP_Authenticator implements Authenticator {
 
 		try {
 			new InitialDirContext(authEnv);
-			log.info("Authentication successful");
-			return new Authentication(username, LDAP_Authenticator.class.getName());
-		} catch (AuthenticationException e) {
-			log.debug("Authentication exception thrown:" + e.getMessage());
-			throw new IcatException(IcatException.IcatExceptionType.SESSION, e.getMessage());
 		} catch (NamingException e) {
-			log.debug("Naming exception thrown" + e.getMessage());
-			throw new IcatException(IcatException.IcatExceptionType.SESSION, e.getMessage());
+			throw new IcatException(IcatException.IcatExceptionType.SESSION,
+					"The username and password do not match");
 		}
+		log.info(username + " logged in succesfully");
+		return new Authentication(username, mechanism);
 
 	}
 
