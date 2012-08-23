@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.icatproject</groupId>
         <artifactId>authn_ldap</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>authn_ldap.ear</artifactId>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.icatproject</groupId>
             <artifactId>authn_ldap.ejb</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <type>ejb</type>
         </dependency>
 
