@@ -7,7 +7,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory>authn_db.ear.config</outputDirectory>
+            <outputDirectory>authn_ldap.ear.config</outputDirectory>
             <directory>${basedir}/src/main/config</directory>
         </fileSet>
     </fileSets>
