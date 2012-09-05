@@ -24,18 +24,16 @@
                 </p>
 
                 <p> You must already have a Java SE installed (i.e. the command "java" is known), then
-                    you can get Java EE 6 SDK Update 4 with JDK
-                    6
+                    you can get Java EE 6 SDK Update 4 with JDK 6
                     Update 31 or later from
-                    http://www.oracle.com/technetwork/java/javaee/downloads/index.html and execute
-                    the script.
+                    http://www.oracle.com/technetwork/java/javaee/downloads/index.html and execute the script.
                 </p>
 
                 <p> Request custom installation, install and configure, and enter proxy details if
                     necessary on your site. Request a server domain, set
                     the domain name and set the
-                    admin password. For a secure deployment of glassfish you should obtain a trusted
-                    certificate rather than
+                    admin password. For a secure deployment of glassfish you should obtain a trusted certificate rather
+                    than
                     using the self-signed one in the distribution.
                 </p>
 
@@ -43,12 +41,9 @@
 
             <subsection name="authn_ldap.properties">
                 <p>
-                    In the unpacked authn_ldap.ear-${project.version}-config.zip file you will find a property file, authn_ldap.properties, which should
-                    both be copied to the
-                    config
-                    directory for your chosen glassfish domain. You will find your domain directory at
-                    $GLASSFISH_HOME/glassfish/domains. The
-                    authn_db.properties file may need changing:
+                    In the unpacked authn_ldap.ear-${project.version}-config.zip file you will find a property file, authn_ldap.properties, which
+                    should be copied to the config directory for your chosen glassfish domain. You will find your domain directory at
+                    $GLASSFISH_HOME/glassfish/domains. The authn_db.properties file may need changing:
                 </p>
 
                 <dl>
@@ -82,7 +77,7 @@
                     . If you have only one domain you may not need to specify the port and if the admin port is not 4848 then specify the correct
                     value.
                 </p>
-               
+
             </subsection>
             <subsection name="Check that authn_ldap works">
                 <p>
