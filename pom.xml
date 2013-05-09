@@ -20,7 +20,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <repoUrl>http://www.icatproject.org/mvn/repo</repoUrl>
         <serverPort>8181</serverPort>
         <serverHost>localhost</serverHost>
     </properties>
@@ -67,6 +66,12 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>ICAT Repo</id>
+            <url>http://www.icatproject.org/mvn/repo</url>
+        </repository>
+
     </repositories>
 
     <build>
