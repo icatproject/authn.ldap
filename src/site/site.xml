@@ -13,11 +13,10 @@
     </menu>
        
     <menu name="Information for Installers">
-    <item name="Authn LDAP Plugin Installation" href="authn_ldap.ear/installation.html"/>
+    <item name="Authn LDAP Plugin Installation" href="installation.html"/>
     </menu>
     
     <menu ref="reports"/>
   
- 
   </body>
 </project>

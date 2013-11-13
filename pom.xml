@@ -36,7 +36,7 @@
     <scm>
         <connection>scm:svn:http://icatproject.googlecode.com/svn/authn/ldap/trunk</connection>
         <developerConnection>scm:svn:https://icatproject.googlecode.com/svn/authn/ldap/trunk</developerConnection>
-        <url>http://code.google.com/p/icatproject/source/browse/#svn%2Fauthn%2ldap%2Ftrunk</url>
+        <url>http://code.google.com/p/icatproject/source/browse/#svn%2Fauthn%2Fldap%2Ftrunk</url>
     </scm>
 
     <licenses>
@@ -97,8 +97,8 @@
                 <version>2.3.2</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
 

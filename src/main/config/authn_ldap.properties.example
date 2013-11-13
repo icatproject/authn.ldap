@@ -8,6 +8,20 @@
 provider_url ldap://logon05.fed.cclrc.ac.uk
 security_principal %@fed.cclrc.ac.uk
 
+# The following may be provided to override or add to the default context
+!context.props = java.naming.factory.initial java.naming.security.authentication
+!context.props.java.naming.factory.initial = com.sun.jndi.ldap.LdapCtxFactory
+!context.props.java.naming.security.authentication = simple
+
+# To map the provided name to something derived from an LDAP query. The % 
+# in the ldap filter will be replaced by the provided user name.
+!ldap.base = DC=fed,DC=cclrc,DC=ac,DC=uk
+!ldap.filter = (&(CN=%)(objectclass=user))
+!ldap.attribute = name
+
+# To force the case to be all lower
+case = lower
+
 # If access to the ldap authentication should only be allowed from certain 
 # IP addresses then provide a space separated list of allowed values. These 
 # take the form of an IPV4 or IPV6 address followed by the number of bits 

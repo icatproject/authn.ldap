@@ -5,7 +5,7 @@ import os
 # authn_ldap
 
 actions, options, arg = getActions()
-props = actions.getGlassfish("authn_ldap-setup.properties", ["authn_ldapProperties", "glassfish", "driver", "port"])
+props = actions.getGlassfish("authn_ldap-setup.properties", ["glassfish", "port"])
 
 prop_name = "authn_ldap.properties"
 prop_list = []

@@ -6,6 +6,11 @@
     </properties>
 
     <body>
+
+        <section name="1.1.0">
+            <p>Provide more configuration possibilities</p>
+        </section>
+
         <section name="1.0.0">
             <p>Initial release</p>
         </section>
