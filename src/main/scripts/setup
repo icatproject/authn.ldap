@@ -3,6 +3,11 @@ from setup_utils import *
 import os
 
 # authn_ldap
+def undeploy():
+    app = actions.getAppName("authn_ldap.ear")
+    if app: actions.undeploy(app) 
+    app = actions.getAppName("authn_ldap")
+    if app: actions.undeploy(app)
 
 actions, options, arg = getActions()
 props = actions.getGlassfish("authn_ldap-setup.properties", ["glassfish", "port"])
@@ -10,37 +15,26 @@ props = actions.getGlassfish("authn_ldap-setup.properties", ["glassfish", "port"
 prop_name = "authn_ldap.properties"
 prop_list = []
 
-if arg == "CONFIGURE":
+if arg in ["CONFIGURE", "INSTALL"]:
     actions.configure(prop_name, prop_list)
-    actions.setConfigured()
+    actions.checkNoErrors()
     
-elif arg == "INSTALL":
-    
-    actions.checkConfigured()
-           
-    icatProperties = actions.getProperties(prop_name, prop_list)       
-           
+if arg == "INSTALL":
+    actions.getProperties(prop_name, prop_list)              
     actions.installFile(prop_name)
     
     try:
-        
-        app = actions.getAppName("authn_ldap.ear")
-        if app: actions.asadmin("undeploy " + app) 
-        app = actions.getAppName("authn_ldap")
-        if app: actions.asadmin("undeploy " + app)
-           
-        actions.deploy("authn_ldap-*.war")
-                    
+        undeploy()   
+        actions.deploy("authn_ldap-*.war", deploymentorder=80)  
+        app = actions.getAppName("icat.server")
+        if app: actions.restartApp(app)
     except Exception, e:
         abort(str(e))
                
-else:  # UNINSTALL
-    
+if arg == "UNINSTALL":
     actions.removeFile(prop_name)
-    
     try:
-        app = actions.getAppName("authn_ldap")
-        if app: actions.asadmin("undeploy " + app)
+        undeploy()
     except Exception, e:
         abort(str(e))       
     

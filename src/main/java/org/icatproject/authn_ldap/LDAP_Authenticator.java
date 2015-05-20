@@ -40,6 +40,9 @@ public class LDAP_Authenticator implements Authenticator {
 	private String ldapAttribute;
 	private Case userNameCase;
 
+	private String privilegedUserName;
+	private String privilegedUserPassword;
+
 	@PostConstruct
 	private void init() {
 
@@ -81,7 +84,8 @@ public class LDAP_Authenticator implements Authenticator {
 				}
 			}
 
-			if (props.has("ldap.base") || props.has("ldap.filter") || props.has("ldap.attribute")) {
+			if (props.has("ldap.base") || props.has("ldap.filter") || props.has("ldap.attribute")
+					|| props.has("privilegedUser.name")) {
 				ldapBase = props.getString("ldap.base");
 				ldapFilter = props.getString("ldap.filter");
 				ldapAttribute = props.getString("ldap.attribute");
@@ -98,6 +102,11 @@ public class LDAP_Authenticator implements Authenticator {
 					logger.fatal(msg);
 					throw new IllegalStateException(msg);
 				}
+			}
+
+			if (props.has("privilegedUser.name")) {
+				this.privilegedUserName = props.getString("privilegedUser.name");
+				this.privilegedUserPassword = props.getString("privilegedUser.password");
 			}
 
 			// Note that the mechanism is optional
@@ -136,8 +145,13 @@ public class LDAP_Authenticator implements Authenticator {
 
 		logger.info("Checking username/password with ldap server");
 
-		authEnv.put(Context.SECURITY_PRINCIPAL, securityPrincipal.replace("%", username));
-		authEnv.put(Context.SECURITY_CREDENTIALS, password);
+		if (privilegedUserName != null) {
+			authEnv.put(Context.SECURITY_PRINCIPAL, privilegedUserName);
+			authEnv.put(Context.SECURITY_CREDENTIALS, privilegedUserPassword);
+		} else {
+			authEnv.put(Context.SECURITY_PRINCIPAL, securityPrincipal.replace("%", username));
+			authEnv.put(Context.SECURITY_CREDENTIALS, password);
+		}
 
 		try {
 			LdapContext m_ctx = new InitialLdapContext(authEnv, null);

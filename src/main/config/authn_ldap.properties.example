@@ -1,12 +1,18 @@
 # Real comments in this file are marked with '#' whereas commented out lines
 # are marked with '!'
 
+# These two entries are required if the ordinary user may not read data from 
+# the LDAP server. If this is the case please provide the username and password 
+# of a suitably privileged user. 
+!privilegedUser.name = MrBig 
+!privilegedUser.password = secret
+
 # The following are needed for ldap authentication. The % character in the 
 # security_principal will be replaced by the specified user name. If you 
 # just use % then the user must enter a complete security_principal as his 
 # user name.
-provider_url ldap://logon05.fed.cclrc.ac.uk
-security_principal %@fed.cclrc.ac.uk
+provider_url = ldap://logon05.fed.cclrc.ac.uk
+security_principal = %@fed.cclrc.ac.uk
 
 # The following may be provided to override or add to the default context
 !context.props = java.naming.factory.initial java.naming.security.authentication
@@ -26,7 +32,7 @@ case = lower
 # IP addresses then provide a space separated list of allowed values. These 
 # take the form of an IPV4 or IPV6 address followed by the number of bits 
 # (starting from the most significant) to consider.
-!ip   130.246.0.0/16   172.16.68.0/24
+!ip  = 130.246.0.0/16   172.16.68.0/24
 
 # The mechanism label to appear before the user name. This may be omitted.
-!mechanism ldap
+mechanism = ldap

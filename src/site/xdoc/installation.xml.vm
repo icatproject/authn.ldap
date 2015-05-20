@@ -19,18 +19,13 @@
                         <a href="${repoUrl}/org/icatproject/authn_ldap/${project.version}/authn_ldap-${project.version}-distro.zip">authn_ldap-${project.version}-distro.zip</a>
                     </li>
                     <li>
-                        A suitable deployed container (here assumed to be glassfish though tomcat should be sufficient) to support a web
+                        A suitable deployed container (here assumed to be glassfish) to support a web
                         application.
-                        Testing has been carried out with Glassfish 3.1.2.
-                        <a href="https://code.google.com/p/icatproject/wiki/Glassfish">Glassfish installation instructions</a>
+                        Testing has been carried out with
+                        Glassfish 4.0.
+                        <a href="http://icatproject.org/installation/glassfish/">Glassfish installation instructions</a>
                         are available.
                     </li>
-                    <li>
-                        A database as described in
-                        <a href="https://code.google.com/p/icatproject/wiki/Databases">Database installation instructions</a>
-                        installed on the server
-                    </li>
-
                     <li>
                         Python (version 2.4 to 2.7) installed on the server.
                     </li>
@@ -41,9 +36,11 @@
                 <ol>
                     <li>
                         Please follow
-                        <a href="http://code.google.com/p/icatproject/wiki/Installation"> the generic installation instructions</a>
+                        <a href="http://icatproject.org/installation/component/"> the generic installation instructions</a>
                     </li>
-                    <li> Update the icat.properties file for icat to see the authenticator.</li>
+                    <li>Update the icat.properties file for icat.server to see the authenticator and restart icat to see the change. The easiest way
+                        is to rerun the setup script for the icat.server.
+                    </li>
                     <li>Check that it works.</li>
                 </ol>
             </subsection>
@@ -103,6 +100,23 @@
 
                     </dd>
                 </dl>
+
+                <h4>Specifying a privileged user</h4>
+                <p>These two entries are required if the ordinary user may not read data from the LDAP server. If this is the case please provide the
+                    username and password of a suitably privileged user. You will also be required to provide ldap mapping information as described in
+                    the next section.
+                </p>
+                <dl>
+                    <dt>
+                        privilegedUser.name
+                    </dt>
+                    <dd>name of privileged user</dd>
+                    <dt>
+                        privilegedUser.password
+                    </dt>
+                    <dd>password of privileged user</dd>
+                </dl>
+
 
                 <h4>ldap mapping</h4>
                 <p>It is possible to specify a query which will map the user name provided onto a new name. This is controlled by the three
@@ -174,8 +188,9 @@
             </subsection>
 
             <subsection name="Check that authn_ldap works">
-                <p>Use testicat (which is installed with ICAT) with one of the entries in the database PASSWD table. It should report that it logs in
-                    but may or may not have the permission to run the rest of the test. If it does not report that it has logged in then please check
+                <p>Use testicat (which is installed with ICAT) with valid ldap credentials. It should report that it logs in
+                    but may or may not have
+                    the permission to run the rest of the test. If it does not report that it has logged in then please check
                     the server.log and the
                     authn_ldap.log files which can both be found in the logs directory below your domain.
                 </p>

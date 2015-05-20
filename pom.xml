@@ -3,7 +3,7 @@
 
     <groupId>org.icatproject</groupId>
     <artifactId>authn_ldap</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <distributionManagement>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.icatproject</groupId>
             <artifactId>icat.utils</artifactId>
-            <version>4.3.0</version>
+            <version>4.9.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
