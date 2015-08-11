@@ -1,189 +1,218 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.icatproject</groupId>
-    <artifactId>authn_ldap</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+	<groupId>org.icatproject</groupId>
+	<artifactId>authn.ldap</artifactId>
+	<version>1.2.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>ICAT LDAP Authn</name>
 
-    <distributionManagement>
-        <downloadUrl>http://www.icatproject.org/mvn/repo</downloadUrl>
-        <site>
-            <id>website</id>
-            <url>scp://www.icatproject.org/var/www/html/mvn/site/authn_ldap/${project.version}</url>
-        </site>
-        <repository>
-            <id>repo</id>
-            <url>scp://www.icatproject.org/var/www/html/mvn/repo</url>
-        </repository>
-    </distributionManagement>
+	<description>LDAP Authentication for ICAT.</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <repoUrl>http://www.icatproject.org/mvn/repo</repoUrl>
-        <serverPort>8181</serverPort>
-        <serverHost>localhost</serverHost>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<repoUrl>http://www.icatproject.org/mvn/repo</repoUrl>
+		<!-- <serverPort>8181</serverPort> -->
+		<!-- <serverHost>localhost</serverHost> -->
+		<project.scm.id>github</project.scm.id>
+	</properties>
 
-    <description>LDAP Authentication for ICAT.</description>
+	<repositories>
+		<repository>
+			<id>ICAT Repo</id>
+			<url>http://www.icatproject.org/mvn/repo</url>
+		</repository>
+	</repositories>
 
-    <issueManagement>
-        <url>http://code.google.com/p/icatproject/issues/list</url>
-        <system>Google Code</system>
-    </issueManagement>
+	<scm>
+		<connection>scm:git:https://github.com/icatproject/authn.ldap.git</connection>
+		<developerConnection>scm:git:https://github.com/icatproject/authn.ldap.git</developerConnection>
+		<url>https://github.com/icatproject/authn.ldap</url>
+	</scm>
 
-    <scm>
-        <connection>scm:svn:http://icatproject.googlecode.com/svn/authn/ldap/trunk</connection>
-        <developerConnection>scm:svn:https://icatproject.googlecode.com/svn/authn/ldap/trunk</developerConnection>
-        <url>http://code.google.com/p/icatproject/source/browse/#svn%2Fauthn%2Fldap%2Ftrunk</url>
-    </scm>
+	<issueManagement>
+		<url>https://github.com/icatproject/authn.ldap/issues</url>
+		<system>GitHub</system>
+	</issueManagement>
 
-    <licenses>
-        <license>
-            <name>BSD 2-Clause</name>
-            <url>http://www.opensource.org/licenses/BSD-2-Clause</url>
-            <distribution>repo</distribution>
-            <comments>Also know informally as the Simplified BSD or FreeBSD License</comments>
-        </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
 
-    <organization>
-        <name>The ICAT Collaboration</name>
-        <url>http://www.icatproject.org</url>
-    </organization>
+	<organization>
+		<name>The ICAT Collaboration</name>
+		<url>http://www.icatproject.org</url>
+	</organization>
 
-    <name>ICAT LDAP Authn</name>
-
-    <repositories>
-
-        <repository>
-            <id>ICAT Repo</id>
-            <url>http://www.icatproject.org/mvn/repo</url>
-        </repository>
-
-    </repositories>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>org.icatproject</groupId>
-            <artifactId>icat.authentication</artifactId>
-            <version>4.3.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.icatproject</groupId>
-            <artifactId>icat.utils</artifactId>
-            <version>4.9.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-
-        <plugins>
+	<distributionManagement>
+		<downloadUrl>http://www.icatproject.org/mvn/repo</downloadUrl>
+		<site>
+			<id>website</id>
+			<url>scp://www.icatproject.org/var/www/html/mvn/site/authn/ldap/${project.version}</url>
+		</site>
+		<repository>
+			<id>repo</id>
+			<url>scp://www.icatproject.org/var/www/html/mvn/repo</url>
+		</repository>
+	</distributionManagement>
 
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/assemble/distribution.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.1</version>
-                <dependencies>
-                    <dependency><!-- add support for ssh/scp -->
-                        <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
-                        <version>1.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
-                <dependencies>
-                    <dependency><!-- add support for ssh/scp -->
-                        <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
-                        <version>1.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
 
-        </plugins>
 
-    </build>
 
-    <reporting>
-        <plugins>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.4</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                            <report>summary</report>
-                            <report>dependencies</report>
-                            <report>issue-tracking</report>
-                            <report>license</report>
-                            <report>plugins</report>
-                            <report>scm</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
 
-        </plugins>
-    </reporting>
+
+
+
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.icatproject</groupId>
+			<artifactId>icat.authentication</artifactId>
+			<version>4.5.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.icatproject</groupId>
+			<artifactId>icat.utils</artifactId>
+			<version>4.9.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.0.4</version>
+			<scope>test</scope>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.5</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assemble/distribution.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.4</version>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+	<reporting>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>dependencies</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>plugins</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+		</plugins>
+	</reporting>
 </project>
 
 

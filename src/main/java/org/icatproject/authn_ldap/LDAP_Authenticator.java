@@ -1,10 +1,13 @@
 package org.icatproject.authn_ldap;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -56,8 +59,8 @@ public class LDAP_Authenticator implements Authenticator {
 				try {
 					addressChecker = new AddressChecker(authips);
 				} catch (IcatException e) {
-					String msg = "Problem creating AddressChecker with information from "
-							+ propsName + " " + e.getMessage();
+					String msg = "Problem creating AddressChecker with information from " + propsName + " "
+							+ e.getMessage();
 					logger.fatal(msg);
 					throw new IllegalStateException(msg);
 				}
@@ -120,8 +123,7 @@ public class LDAP_Authenticator implements Authenticator {
 	}
 
 	@Override
-	public Authentication authenticate(Map<String, String> credentials, String remoteAddr)
-			throws IcatException {
+	public Authentication authenticate(Map<String, String> credentials, String remoteAddr) throws IcatException {
 
 		if (addressChecker != null) {
 			if (!addressChecker.check(remoteAddr)) {
@@ -134,13 +136,11 @@ public class LDAP_Authenticator implements Authenticator {
 		logger.trace("login:" + username);
 
 		if (username == null || username.equals("")) {
-			throw new IcatException(IcatException.IcatExceptionType.SESSION,
-					"Username cannot be null or empty.");
+			throw new IcatException(IcatException.IcatExceptionType.SESSION, "Username cannot be null or empty.");
 		}
 		String password = credentials.get("password");
 		if (password == null || password.equals("")) {
-			throw new IcatException(IcatException.IcatExceptionType.SESSION,
-					"Password cannot be null or empty.");
+			throw new IcatException(IcatException.IcatExceptionType.SESSION, "Password cannot be null or empty.");
 		}
 
 		logger.info("Checking username/password with ldap server");
@@ -160,8 +160,8 @@ public class LDAP_Authenticator implements Authenticator {
 				ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 				ctls.setCountLimit(0);
 				ctls.setTimeLimit(0);
-				NamingEnumeration<SearchResult> results = m_ctx.search(ldapBase,
-						ldapFilter.replace("%", username), ctls);
+				NamingEnumeration<SearchResult> results = m_ctx.search(ldapBase, ldapFilter.replace("%", username),
+						ctls);
 				if (!results.hasMoreElements()) {
 					throw new IcatException(IcatException.IcatExceptionType.SESSION,
 							"Unable to locate user in LDAP directory");
@@ -170,8 +170,7 @@ public class LDAP_Authenticator implements Authenticator {
 				logger.debug("username changed to " + username + " from ldap search");
 			}
 		} catch (NamingException e) {
-			throw new IcatException(IcatException.IcatExceptionType.SESSION,
-					"The username and password do not match");
+			throw new IcatException(IcatException.IcatExceptionType.SESSION, "The username and password do not match");
 		}
 
 		if (userNameCase == Case.UPPER) {
@@ -185,6 +184,17 @@ public class LDAP_Authenticator implements Authenticator {
 		logger.info(username + " logged in succesfully");
 		return new Authentication(username, mechanism);
 
+	}
+
+	@Override
+	public String getDescription() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		JsonGenerator gen = Json.createGenerator(baos);
+		gen.writeStartObject().writeStartArray("keys");
+		gen.writeStartObject().write("name", "username").writeEnd();
+		gen.writeStartObject().write("name", "password").write("hide", true).writeEnd();
+		gen.writeEnd().writeEnd().close();
+		return baos.toString();
 	}
 
 }

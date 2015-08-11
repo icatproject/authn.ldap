@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
 
-    <properties>
-        <title>ICAT AUTHN_LDAP Release Notes</title>
-    </properties>
+	<properties>
+		<title>ICAT AUTHN_LDAP Release Notes</title>
+	</properties>
 
-    <body>
-    
-     <section name="1.2.0">
-            <p>Provide ability to specify a user with the right to query the LDAP database.</p>
-            <ul>
-                <li>Set deploymentorder to 80</li>
-                <li>Change the properties.example file to include mechanism by default.</li>
-            </ul>
-        </section>
+	<body>
 
-        <section name="1.1.0">
-            <p>Provide more configuration possibilities</p>
-        </section>
+		<section name="1.2.0">
+			<p>Provide ability to specify a user with the right to query the LDAP
+				database.</p>
+			<ul>
+				<li>Set deploymentorder to 80</li>
+				<li>Change the properties.example file to include mechanism by
+					default.</li>
+				<li>Implement the Authenticator interface 4.5.0 with the
+					getDescription() call.</li>
+			</ul>
+		</section>
 
-        <section name="1.0.0">
-            <p>Initial release</p>
-        </section>
+		<section name="1.1.0">
+			<p>Provide more configuration possibilities</p>
+		</section>
 
-    </body>
+		<section name="1.0.0">
+			<p>Initial release</p>
+		</section>
+
+	</body>
 </document>
             
             
