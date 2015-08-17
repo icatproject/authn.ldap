@@ -8,6 +8,8 @@ def undeploy():
     if app: actions.undeploy(app) 
     app = actions.getAppName("authn_ldap")
     if app: actions.undeploy(app)
+    app = actions.getAppName("authn.ldap")
+    if app: actions.undeploy(app)
 
 actions, options, arg = getActions()
 props = actions.getGlassfish("authn_ldap-setup.properties", ["glassfish", "port"])
@@ -25,7 +27,7 @@ if arg == "INSTALL":
     
     try:
         undeploy()   
-        actions.deploy("authn_ldap-*.war", deploymentorder=80)  
+        actions.deploy("authn.ldap-*.war", deploymentorder=80)  
         app = actions.getAppName("icat.server")
         if app: actions.restartApp(app)
     except Exception, e:
