@@ -1,12 +1,6 @@
 # Real comments in this file are marked with '#' whereas commented out lines
 # are marked with '!'
 
-# These two entries are required if the ordinary user may not read data from 
-# the LDAP server. If this is the case please provide the username and password 
-# of a suitably privileged user. 
-!privilegedUser.name = MrBig 
-!privilegedUser.password = secret
-
 # The following are needed for ldap authentication. The % character in the 
 # security_principal will be replaced by the specified user name. If you 
 # just use % then the user must enter a complete security_principal as his 

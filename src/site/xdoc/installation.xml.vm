@@ -98,18 +98,18 @@
 			</dd>
 		</dl>
 
-		<h4>Specifying a privileged user</h4>
-		<p>These two entries are required if the ordinary user may not
-			read data from the LDAP server. If this is the case please provide
-			the username and password of a suitably privileged user. You will
-			also be required to provide ldap mapping information as described in
-			the next section.</p>
-		<dl>
-			<dt>privilegedUser.name</dt>
-			<dd>name of privileged user</dd>
-			<dt>privilegedUser.password</dt>
-			<dd>password of privileged user</dd>
-		</dl>
+<!-- 		<h4>Specifying a privileged user</h4> -->
+<!-- 		<p>These two entries are required if the ordinary user may not -->
+<!-- 			read data from the LDAP server. If this is the case please provide -->
+<!-- 			the username and password of a suitably privileged user. You will -->
+<!-- 			also be required to provide ldap mapping information as described in -->
+<!-- 			the next section.</p> -->
+<!-- 		<dl> -->
+<!-- 			<dt>privilegedUser.name</dt> -->
+<!-- 			<dd>name of privileged user</dd> -->
+<!-- 			<dt>privilegedUser.password</dt> -->
+<!-- 			<dd>password of privileged user</dd> -->
+<!-- 		</dl> -->
 
 
 		<h4>ldap mapping</h4>

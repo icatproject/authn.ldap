@@ -107,10 +107,13 @@ public class LDAP_Authenticator implements Authenticator {
 				}
 			}
 
-			if (props.has("privilegedUser.name")) {
-				this.privilegedUserName = props.getString("privilegedUser.name");
-				this.privilegedUserPassword = props.getString("privilegedUser.password");
-			}
+			// TODO This is commented out until such time as the requirement is
+			// clarified.
+			// if (props.has("privilegedUser.name")) {
+			// this.privilegedUserName = props.getString("privilegedUser.name");
+			// this.privilegedUserPassword =
+			// props.getString("privilegedUser.password");
+			// }
 
 			// Note that the mechanism is optional
 			mechanism = props.getProperty("mechanism");

@@ -9,8 +9,7 @@
 	<body>
 
 		<section name="1.2.0">
-			<p>Provide ability to specify a user with the right to query the LDAP
-				database.</p>
+			<p>Implement the Authenticator interface 4.5.0</p>
 			<ul>
 				<li>Set deploymentorder to 80</li>
 				<li>Change the properties.example file to include mechanism by
