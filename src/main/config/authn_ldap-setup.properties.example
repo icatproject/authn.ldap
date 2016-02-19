@@ -1,5 +1,11 @@
-# Must contain "glassfish/domains"
-glassfish=/home/fisher/pf/glassfish4
+# Glassfish
+secure         = true
+container      = glassfish
+home           = /home/fisher/pf/glassfish4
+port           = 4848
 
-# Port for glassfish admin calls (normally 4848)
-port=4848
+# WildFly
+!secure         = false
+!container      = wildfly
+!home           = /home/fisher/pf/wildfly
+!port           = 9990

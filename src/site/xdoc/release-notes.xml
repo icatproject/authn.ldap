@@ -13,9 +13,12 @@
 			<ul>
 				<li>Set deploymentorder to 80</li>
 				<li>Change the properties.example file to include mechanism by
-					default.</li>
+					default.
+				</li>
 				<li>Implement the Authenticator interface 4.5.0 with the
-					getDescription() call.</li>
+					getDescription() call.
+				</li>
+				<li>Support multiple containers</li>
 			</ul>
 		</section>
 

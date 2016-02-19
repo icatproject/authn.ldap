@@ -54,8 +54,8 @@ public class LDAP_Authenticator implements Authenticator {
 		try {
 			props.loadFromFile(propsName);
 
-			String authips = props.getProperty("ip");
-			if (authips != null) {
+			if (props.has("ip")) {
+				String authips = props.getString("ip");
 				try {
 					addressChecker = new AddressChecker(authips);
 				} catch (IcatException e) {
@@ -116,7 +116,9 @@ public class LDAP_Authenticator implements Authenticator {
 			// }
 
 			// Note that the mechanism is optional
-			mechanism = props.getProperty("mechanism");
+			if (props.has("mechanism")) {
+				mechanism = props.getString("mechanism");
+			}
 		} catch (CheckedPropertyException e) {
 			logger.fatal(e.getMessage());
 			throw new IllegalStateException(e.getMessage());

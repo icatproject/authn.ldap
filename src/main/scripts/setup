@@ -2,7 +2,7 @@
 from setup_utils import *
 import os
 
-# authn_ldap
+# authn.ldap
 def undeploy():
     app = actions.getAppName("authn_ldap.ear")
     if app: actions.undeploy(app) 
@@ -11,8 +11,7 @@ def undeploy():
     app = actions.getAppName("authn.ldap")
     if app: actions.undeploy(app)
 
-actions, options, arg = getActions()
-props = actions.getGlassfish("authn_ldap-setup.properties", ["glassfish", "port"])
+actions, arg, props = getActions("authn_ldap-setup.properties", [])
 
 prop_name = "authn_ldap.properties"
 prop_list = []
@@ -22,12 +21,12 @@ if arg in ["CONFIGURE", "INSTALL"]:
     actions.checkNoErrors()
     
 if arg == "INSTALL":
-    actions.getProperties(prop_name, prop_list)              
+    getProperties(prop_name, prop_list)              
     actions.installFile(prop_name)
     
     try:
-        undeploy()   
-        actions.deploy("authn.ldap-*.war", deploymentorder=80)  
+        undeploy()
+        actions.deploy(deploymentorder=80)  
         app = actions.getAppName("icat.server")
         if app: actions.restartApp(app)
     except Exception, e:
