@@ -19,10 +19,10 @@
 			<li>The authn.ldap distribution: <a
 				href="${repoUrl}/org/icatproject/authn.ldap/${project.version}/authn.ldap-${project.version}-distro.zip">authn.ldap-${project.version}-distro.zip</a>
 			</li>
-			<li>A suitable deployed container (here assumed to be glassfish)
-				to support a web application. Testing has been carried out with
-				Glassfish 4.0. <a
-				href="http://icatproject.org/installation/glassfish/">Glassfish
+			<li>A suitable deployed container (here assumed to be
+				Glassfish/Payara) to support a web application. Testing has been
+				carried out with payara41. <a
+				href="http://icatproject.org/installation/glassfish/">Glassfish/Payara
 					installation instructions</a> are available.
 			</li>
 			<li>Python (version 2.4 to 2.7) installed on the server.</li>
@@ -35,9 +35,11 @@
 				href="http://icatproject.org/installation/component/"> the
 					generic installation instructions</a>
 			</li>
-			<li>Update the icat.properties file for icat.server to see the
+			<li>Update the run.properties file for icat.server to see the
 				authenticator and restart icat to see the change. The easiest way is
-				to rerun the setup script for the icat.server.</li>
+				to rerun the setup script for the icat.server. <em>Remember
+					that restful authenticators are identified by url rather than jndi.</em>
+			</li>
 			<li>Check that it works.</li>
 		</ol>
 		</subsection>

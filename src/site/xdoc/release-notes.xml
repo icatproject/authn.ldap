@@ -8,6 +8,10 @@
 
 	<body>
 
+		<section name="1.2.1">
+			<p>Payara compatible</p>
+		</section>
+
 		<section name="1.2.0">
 			<p>Implement the Authenticator interface 4.5.0</p>
 			<ul>
