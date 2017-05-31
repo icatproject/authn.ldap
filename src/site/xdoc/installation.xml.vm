@@ -23,7 +23,9 @@
 				Glassfish/Payara) to support a web application. Testing has been
 				carried out with payara41. <a
 				href="http://icatproject.org/installation/glassfish/">Glassfish/Payara
-					installation instructions</a> are available.
+					installation instructions</a> are available. If domain1 is not being
+				used then line 21 of the setup script must be modified to match the
+				actual domain name.
 			</li>
 			<li>Python (version 2.4 to 2.7) installed on the server.</li>
 		</ul>
