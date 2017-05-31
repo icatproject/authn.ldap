@@ -3,7 +3,7 @@
 
 	<groupId>org.icatproject</groupId>
 	<artifactId>authn.ldap</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>ICAT LDAP Authn</name>
 
@@ -28,7 +28,7 @@
 		<connection>scm:git:${gitUrl}.git</connection>
 		<developerConnection>scm:git:${gitUrl}.git</developerConnection>
 		<url>${gitUrl}</url>
-		<tag>v1.2.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
