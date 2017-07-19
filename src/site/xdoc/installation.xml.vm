@@ -11,7 +11,7 @@
 	<section name="Installation">
 
 		<subsection name="Compatibility">This authentication
-		plugin will work with an ICAT version of 4.6 or greater.</subsection>
+		plugin will work with an ICAT version of 4.9.0 or greater.</subsection>
 
 		<subsection name="Prerequisites">
 
@@ -20,14 +20,18 @@
 				href="${repoUrl}/org/icatproject/authn.ldap/${project.version}/authn.ldap-${project.version}-distro.zip">authn.ldap-${project.version}-distro.zip</a>
 			</li>
 			<li>A suitable deployed container (here assumed to be
-				Glassfish/Payara) to support a web application. Testing has been
+				Payara/Glassfish) to support a web application. Testing has been
 				carried out with payara41. <a
-				href="http://icatproject.org/installation/glassfish/">Glassfish/Payara
-					installation instructions</a> are available. If domain1 is not being
-				used then line 21 of the setup script must be modified to match the
-				actual domain name.
+				href="http://icatproject.org/installation/glassfish/">Payara/Glassfish
+					installation instructions</a> are available.
 			</li>
 			<li>Python (version 2.4 to 2.7) installed on the server.</li>
+			<li>If you wish to connect to the ldap server with SASL i.e. a
+				url starting ldaps: rather than ldap: then you may need to store a
+				certificate to say that you trust the ldap server. If this is
+				necessary then, in the case of Payara/Glassfish, it should be added
+				to keystore.jks in the config directory of the domain you are using
+				and the domain stopped and started again.</li>
 		</ul>
 		</subsection>
 
@@ -46,10 +50,10 @@
 		</ol>
 		</subsection>
 
-		<subsection name="The authn_ldap.setup.properties file">
+		<subsection name="The setup.properties file">
 		<dl>
 			<dt>container</dt>
-			<dd>May be either glassfish or wildfly - though only glassfish
+			<dd>May be either Glassfish or wildfly - though only glassfish
 				is working fully at the moment.</dd>
 			<dt>home</dt>
 			<dd>is the top level of the container installation. For
@@ -65,10 +69,21 @@
 		</subsection>
 
 
-		<subsection name="The authn_ldap.properties file">
+		<subsection name="The run.properties file">
 		<p>This file configures from where calls may be made, properties
 			to pass to the ldap server and mappings to perform on the provided
 			user name to get the returned value.</p>
+
+		<dl>
+			<dt>provider_url</dt>
+			<dd>Space separated list of ldap url values. Each must start
+				with ldap or ldaps.</dd>
+
+			<dt>security_principal</dt>
+			<dd>The % character in the security_principal will be replaced
+				by the specified user name. If you just use % then the user must
+				enter a complete security_principal as his user name.</dd>
+		</dl>
 
 		<h4>Control of IP address from which a call is allowed</h4>
 		<dl>
@@ -107,15 +122,6 @@
 
 			</dd>
 		</dl>
-
-		<!-- 		<h4>Specifying a privileged user</h4> --> <!-- 		<p>These two entries are required if the ordinary user may not -->
-		<!-- 			read data from the LDAP server. If this is the case please provide -->
-		<!-- 			the username and password of a suitably privileged user. You will -->
-		<!-- 			also be required to provide ldap mapping information as described in -->
-		<!-- 			the next section.</p> --> <!-- 		<dl> --> <!-- 			<dt>privilegedUser.name</dt> -->
-		<!-- 			<dd>name of privileged user</dd> --> <!-- 			<dt>privilegedUser.password</dt> -->
-		<!-- 			<dd>password of privileged user</dd> --> <!-- 		</dl> -->
-
 
 		<h4>ldap mapping</h4>
 		<p>It is possible to specify a query which will map the user name
@@ -170,15 +176,14 @@
 		</subsection>
 
 		<subsection name="Update the icat.properties file for your ICAT">
-		<p>This is required for icat to see the new authenticator. As any
-			earlier version of this authenticator will have been removed then it
-			is important to perform this next step promptly.</p>
+		<p>This is required for icat to see the new authenticator if this
+			is the first time that a RestFul (2.0.0 and greater) LDAP
+			authenticator has been used by the icat.server.</p>
 		<p>
-			If you still have the installation directory for icat then edit the
-			icat.properties to refer to the new authenticator and type:
+			Go to the installation directory for icat.server then edit the
+			run.properties to refer to the new authenticator and type:
 			<kbd> ./setup install </kbd>
-			Otherwise edit the icat.properties file in the config directory for
-			your domain and restart the glassfish domain.
+
 		</p>
 
 		</subsection>
@@ -188,8 +193,21 @@
 			credentials. It should report that it logs in but may or may not have
 			the permission to run the rest of the test. If it does not report
 			that it has logged in then please check the server.log and the
-			authn_ldap.log files which can both be found in the logs directory
-			below your domain.</p>
+			authn_ldap.log files which can both be found in the logs directory.</p>
+
+		A simple standalone test is to run:
+		<blockquote>
+			<code>curl -k https://localhost:8181/authn.ldap/description -w
+				"\n"</code>
+			which returns a description, <br />
+			<code>curl -k https://localhost:8181/authn.ldap/version -w
+				"\n"</code>
+			which returns the version and<br />
+			<code>curl -k https://localhost:8181/authn.ldap/authenticate
+				-w "\n" -d
+				'json={"credentials":[{"username":"&lt;username&gt;"},{"password":"&lt;secret&gt;"}]}'</code>
+			to authenticate.
+		</blockquote>
 		</subsection>
 
 	</section>

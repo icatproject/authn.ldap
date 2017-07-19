@@ -8,6 +8,17 @@
 
 	<body>
 
+		<section name="2.0.0">
+			<p>Improved diagnostics</p>
+			<ul>
+				<li>If there are bind problems these are reported correctly rather
+					than claiming that the username/password combination was wrong
+				</li>
+				<li>This is now a Restful authenticator.</li>
+			</ul>
+		</section>
+
+
 		<section name="1.2.1">
 			<p>Payara compatible</p>
 		</section>

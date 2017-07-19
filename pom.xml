@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.icatproject</groupId>
 	<artifactId>authn.ldap</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>ICAT LDAP Authn</name>
 
@@ -20,7 +21,7 @@
 	<repositories>
 		<repository>
 			<id>ICAT Repo</id>
-			<url>http://www.icatproject.org/mvn/repo</url>
+			<url>${repoUrl}</url>
 		</repository>
 	</repositories>
 
@@ -52,7 +53,7 @@
 		<downloadUrl>${repoUrl}</downloadUrl>
 		<site>
 			<id>repo.icatproject.org</id>
-			<url>dav:https://repo.icatproject.org/site/authn/ldap/${project.version}</url>
+			<url>dav:${repoUrl}/../site/authn/ldap/${project.version}</url>
 		</site>
 		<repository>
 			<id>repo.icatproject.org</id>
@@ -65,7 +66,7 @@
 		<dependency>
 			<groupId>org.icatproject</groupId>
 			<artifactId>icat.authentication</artifactId>
-			<version>4.5.0</version>
+			<version>4.6.0</version>
 		</dependency>
 
 		<dependency>
@@ -75,15 +76,30 @@
 		</dependency>
 
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.3.4</version>
+			<scope>test</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -94,10 +110,16 @@
 			<scope>test</scope>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 
 		<extensions>
 			<extension>
@@ -108,6 +130,72 @@
 		</extensions>
 
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<executions>
+					<execution>
+						<id>Install .war</id>
+						<phase>pre-integration-test</phase>
+
+						<configuration>
+							<skip>${maven.install.skip}</skip>
+							<executable>asadmin</executable>
+							<arguments>
+								<argument>--echo</argument>
+								<argument>--port=4848</argument>
+								<argument>deploy</argument>
+								<argument>--force=true</argument>
+								<argument>${project.build.directory}/${project.build.finalName}.war</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<workingDirectory>${basedir}/src/test/config</workingDirectory>
+					<excludes>
+						<exclude>
+							**/integration/*.java
+						</exclude>
+
+					</excludes>
+					<testFailureIgnore>false</testFailureIgnore>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<includes>
+						<include>**/integration/Test*.java</include>
+					</includes>
+
+					<systemPropertyVariables>
+						<javax.net.ssl.trustStore>${javax.net.ssl.trustStore}</javax.net.ssl.trustStore>
+						<serverUrl>${serverUrl}</serverUrl>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,7 +284,7 @@
 					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 				</configuration>
 				<reportSets>
-					<reportSet>
+	<reportSet>
 						<reports>
 							<report>index</report>
 							<report>summary</report>

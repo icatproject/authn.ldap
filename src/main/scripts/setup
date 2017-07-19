@@ -4,22 +4,15 @@ import os
 
 # authn.ldap
 def undeploy():
-    app = actions.getAppName("authn_ldap.ear")
-    if app: actions.undeploy(app) 
     app = actions.getAppName("authn_ldap")
     if app: actions.undeploy(app)
     app = actions.getAppName("authn.ldap")
     if app: actions.undeploy(app)
 
-actions, arg, props = getActions("authn_ldap-setup.properties", [])
+actions, arg, props = getActions("setup.properties", [])
 
-prop_name = "authn_ldap.properties"
+prop_name = "run.properties"
 prop_list = []
-
-home = props["home"]
-if props["container"] != "Glassfish": abort("Only Glassfish/Payara supported at present")
-config=os.path.join(home,"glassfish","domains","domain1","config")
-if not os.path.exists(config): abort ("Config directory " + config + " not found - please hack the line above for your domain") 
 
 if arg in ["CONFIGURE", "INSTALL"]:
     actions.configure(prop_name, prop_list)
@@ -27,18 +20,16 @@ if arg in ["CONFIGURE", "INSTALL"]:
     
 if arg == "INSTALL":
     getProperties(prop_name, prop_list)              
-    actions.installFile(prop_name, config)
     
     try:
-        undeploy()
-        actions.deploy(deploymentorder=80)  
-        app = actions.getAppName("icat.server")
-        if app: actions.restartApp(app)
+        undeploy()   
+        ovfiles = [[prop_name, "WEB-INF/classes"]]
+        if os.path.exists("logback.xml"): ovfiles.append(["logback.xml", "WEB-INF/classes"])
+        actions.deploy(deploymentorder=80, files=ovfiles)
     except Exception, e:
         abort(str(e))
                
 if arg == "UNINSTALL":
-    actions.removeFile(prop_name, config)
     try:
         undeploy()
     except Exception, e:
