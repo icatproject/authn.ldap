@@ -1,0 +1,208 @@
+<html>
+<head>
+<title>installation</title>
+</head>
+<body>
+
+	<h1>Installation</h1>
+
+	<h2>Compatibility</h2>
+	This authentication plugin will work with an ICAT version of 4.9.0 or
+	greater.
+
+	<h2>Prerequisites</h2>
+
+	<ul>
+		<li>The authn.ldap distribution: <a
+			href="${repoUrl}/org/icatproject/authn.ldap/${project.version}/authn.ldap-${project.version}-distro.zip">authn.ldap-${project.version}-distro.zip</a>
+		</li>
+		<li>A suitable deployed container (here assumed to be
+			Payara/Glassfish) to support a web application. Testing has been
+			carried out with payara41. <a
+			href="http://icatproject.org/installation/glassfish/">Payara/Glassfish
+				installation instructions</a> are available.
+		</li>
+		<li>Python (version 2.4 to 2.7) installed on the server.</li>
+		<li>If you wish to connect to the ldap server with SASL i.e. a
+			url starting ldaps: rather than ldap: then you may need to store a
+			certificate to say that you trust the ldap server. If this is
+			necessary then, in the case of Payara/Glassfish, it should be added
+			to keystore.jks in the config directory of the domain you are using
+			and the domain stopped and started again.</li>
+	</ul>
+
+	<h2>Summary of steps</h2>
+	<ol>
+		<li>Please follow <a
+			href="http://icatproject.org/installation/component/"> the
+				generic installation instructions</a>
+		</li>
+		<li>If you are introducing the ldap authenticator then update
+			the run.properties file for icat.server to see the authenticator and
+			restart icat to see the change. The easiest way is to rerun the setup
+			script for the icat.server. <em>Remember that restful
+				authenticators are identified by url rather than jndi.</em>
+		</li>
+		<li>Check that it works.</li>
+	</ol>
+
+	<h2>The setup.properties file</h2>
+	<dl>
+		<dt>container</dt>
+		<dd>
+			Values must be chosen from: <a target="_blank"
+				href="http://www.eclipse.org/eclipselink/api/2.6/org/eclipse/persistence/config/TargetServer.html">TargetServer</a>
+			Though only Glassfish is working properly at the moment.
+		</dd>
+		<dt>home</dt>
+		<dd>is the top level of the container installation. For Glassfish
+			it must contain "glassfish/domains" and for JBoss (wildfly) it must
+			contain jboss-modules.jar.</dd>
+		<dt>port</dt>
+		<dd>is the administration port of the container which is
+			typically 4848 for Glassfish and 9990 for JBoss.</dd>
+		<dt>secure</dt>
+		<dd>must be set to true or false. If true then only https and not
+			http connections will be allowed.</dd>
+	</dl>
+
+	<h2>The logback.xml file</h2>
+	<p>If you wish to modify the provided logging levels then rename
+		logback.xml.example to logback.xml and edit it to suit your needs.</p>
+
+	<h2>The run.properties file</h2>
+	<p>This file configures from where calls may be made, properties to
+		pass to the ldap server and mappings to perform on the provided user
+		name to get the returned value.</p>
+
+	<dl>
+		<dt>provider_url</dt>
+		<dd>Space separated list of ldap url values. Each must start with
+			ldap or ldaps.</dd>
+
+		<dt>security_principal</dt>
+		<dd>The % character in the security_principal will be replaced by
+			the specified user name. If you just use % then the user must enter a
+			complete security_principal as his user name.</dd>
+	</dl>
+
+	<h4>Control of IP address from which a call is allowed</h4>
+	<dl>
+		<dt>ip</dt>
+		<dd>If access to the LDAP authentication should only be allowed
+			from certain IP addresses then provide a space separated list of
+			allowed values. These take the form of an IPV4 or IPV6 address
+			followed by the number of bits (starting from the most significant)
+			to consider.</dd>
+
+	</dl>
+
+	<h4>Overriding or supplementing key value pairs in the LDAP
+		context.</h4>
+	<p>This is to cater for possibilities not otherwise covered</p>
+	<dl>
+		<dt>context.props</dt>
+		<dd>an optional space separated list of keys to be added to or
+			overridden in the ldap context</dd>
+
+		<dt>context.props.&lt;key&gt;</dt>
+		<dd>
+			the value for the specified key. For example you might have:
+
+			<blockquote>
+				<code>
+					context.props = java.naming.factory.initial
+					java.naming.security.authentication <br />
+					context.props.java.naming.factory.initial =
+					com.sun.jndi.ldap.LdapCtxFactory <br />
+					context.props.java.naming.security.authentication = simple <br />
+				</code>
+			</blockquote>
+
+			which are actually the default values.
+
+		</dd>
+	</dl>
+
+	<h4>ldap mapping</h4>
+	<p>It is possible to specify a query which will map the user name
+		provided onto a new name. This is controlled by the three properties
+		listed below. If one is present they must all be present. For example:</p>
+	<blockquote>
+		<code>
+			ldap.base = DC=fed,DC=cclrc,DC=ac,DC=uk <br /> ldap.filter =
+			(&amp;(CN=%)(objectclass=user)) <br /> ldap.attribute = name
+		</code>
+	</blockquote>
+
+	will work at RAL to replace the user name identified by the CN value
+	with that held in the name attribute.
+
+	<dl>
+
+		<dt>ldap.base</dt>
+		<dd>the base for the search</dd>
+		<dt>ldap.filter</dt>
+		<dd>an LDAP filter which should return one result - the first one
+			returned is used</dd>
+
+		<dt>ldap.attribute</dt>
+		<dd>the attribute name to use</dd>
+	</dl>
+
+
+	<h4>Control of case of returned name</h4>
+	In addition to the ability to use an ldap search to map the name you
+	can simple specify case = upper or case = lower to simply convert the
+	case. This is applied after the ldap mapping described above.
+	<dl>
+
+		<dt>case</dt>
+		<dd>optional case specification - if specified must be "upper" or
+			"lower".</dd>
+	</dl>
+
+	<h4>Control of mechanism part of the returned name</h4>
+	<dl>
+
+		<dt>mechanism</dt>
+		<dd>if specified is a label to appear before the user name as it
+			is made available to ICAT for authorization. For example if this is
+			set to 'ldap' then the user 'root' will be provided to ICAT as
+			'ldap/root', but if no mechanism is specified it will be provided
+			simply as 'root'.</dd>
+	</dl>
+
+
+	<h2>Update the icat.properties file for your ICAT</h2>
+	<p>This is required for icat to see the new authenticator if this
+		is the first time that a RestFul (2.0.0 and greater) LDAP
+		authenticator has been used by the icat.server.</p>
+	<p>
+		Go to the installation directory for icat.server then edit the
+		run.properties to refer to the new authenticator and type:
+		<kbd> ./setup install </kbd>
+	</p>
+
+
+	<h2>Check that authn.ldap works</h2>
+	<p>Use testicat (which is installed with ICAT) with valid ldap
+		credentials. It should report that it logs in but may or may not have
+		the permission to run the rest of the test. If it does not report that
+		it has logged in then please check the server.log and the
+		authn_ldap.log files which can both be found in the logs directory.</p>
+
+	A simple standalone test is to run:
+	<blockquote>
+		<code>curl -k https://localhost:8181/authn.ldap/description -w
+			"\n"</code>
+		which returns a description, <br />
+		<code>curl -k https://localhost:8181/authn.ldap/version -w "\n"</code>
+		which returns the version and<br />
+		<code>curl -k https://localhost:8181/authn.ldap/authenticate -w
+			"\n" -d
+			'json={"credentials":[{"username":"&lt;username&gt;"},{"password":"&lt;secret&gt;"}]}'</code>
+		to authenticate.
+	</blockquote>
+</body>
+</html>

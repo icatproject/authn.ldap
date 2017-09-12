@@ -23,7 +23,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		JsonGenerator gen = Json.createGenerator(baos);
 		gen.writeStartObject().write("code", "NOT_IMPLEMENTED")
-				.write("message", "Operation not implemented by this authn.db server.").writeEnd().close();
+				.write("message", "Operation not implemented by this authn.ldap server.").writeEnd().close();
 		return Response.status(Response.Status.NOT_IMPLEMENTED).entity(baos.toString()).build();
 	}
 }
