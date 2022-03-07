@@ -65,3 +65,6 @@ jobs:
           grep payara ~/.bash_profile > payara_path_command
           source payara_path_command
           mvn install -DskipTests
+
+      - name: Run Unit Tests
+        run: mvn test -B
