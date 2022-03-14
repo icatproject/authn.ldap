@@ -39,12 +39,13 @@ jobs:
         with:
           repository: icatproject-contrib/icat-ansible
           path: icat-ansible
+          ref: fix_warnings_#23
       - name: Install Ansible
         run: pip install -r icat-ansible/requirements.txt
 
       # Prep for running the playbook
       - name: Create Hosts File
-        run: echo -e "[icatdb-minimal-hosts]\nlocalhost ansible_connection=local" > icat-ansible/hosts
+        run: echo -e "[icatdb_minimal_hosts]\nlocalhost ansible_connection=local" > icat-ansible/hosts
       - name: Prepare vault pass
         run: echo -e "icattravispw" > icat-ansible/vault_pass.txt
       - name: Move vault to directory it'll get detected by Ansible
@@ -55,7 +56,7 @@ jobs:
       - name: Add Ansible Roles
         run: |
           sed -i "/- role: icat-server$/a\
-          \    - role: dev-common" icat-ansible/icatdb-minimal-hosts.yml
+          \    - role: dev-common" icat-ansible/icatdb_minimal_hosts.yml
 
       # Force hostname to localhost - bug fix for previous ICAT Ansible issues on Actions
       - name: Change hostname to localhost
@@ -64,7 +65,7 @@ jobs:
       # Create local instance of ICAT
       - name: Run ICAT Ansible Playbook
         run: |
-          ansible-playbook icat-ansible/icatdb-minimal-hosts.yml -i icat-ansible/hosts --vault-password-file icat-ansible/vault_pass.txt -vv
+          ansible-playbook icat-ansible/icatdb_minimal_hosts.yml -i icat-ansible/hosts --vault-password-file icat-ansible/vault_pass.txt -vv
 
       - name: Checkout authn-ldap
         uses: actions/checkout@v2
