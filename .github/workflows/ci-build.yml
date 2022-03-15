@@ -39,7 +39,7 @@ jobs:
         with:
           repository: icatproject-contrib/icat-ansible
           path: icat-ansible
-          ref: fix_warnings_#23
+          ref: underscore_changes
       - name: Install Ansible
         run: pip install -r icat-ansible/requirements.txt
 
@@ -55,8 +55,8 @@ jobs:
           sed -i -e "s/^payara_user: \"glassfish\"/payara_user: \"runner\"/" icat-ansible/group_vars/all/vars.yml
       - name: Add Ansible Roles
         run: |
-          sed -i "/- role: icat-server$/a\
-          \    - role: dev-common" icat-ansible/icatdb_minimal_hosts.yml
+          sed -i "/- role: icat_server$/a\
+          \    - role: dev_common" icat-ansible/icatdb_minimal_hosts.yml
 
       # Force hostname to localhost - bug fix for previous ICAT Ansible issues on Actions
       - name: Change hostname to localhost
